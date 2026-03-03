@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Ingreso de Cliente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0f14;--surface:#161a23;--surface2:#1e2330;--border:#2a3040;--accent:#c8a96e;--accent2:#e8c98e;--text:#eef0f5;--muted:#7a849a;--success:#4caf88;--error:#e05c6a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(200,169,110,.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 90%,rgba(100,120,200,.05) 0%,transparent 60%);}
+  .header{background:linear-gradient(135deg,var(--surface) 0%,#1a1f2e 100%);border-bottom:1px solid var(--border);padding:20px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);}
+  .header-left{display:flex;align-items:center;gap:16px;}
+  .header-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .header h1{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--accent2);letter-spacing:.5px;}
+  .header p{font-size:.78rem;color:var(--muted);margin-top:2px;}
+  .btn-admin{padding:9px 20px;background:transparent;border:1px solid rgba(200,169,110,.4);color:var(--accent);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap;}
+  .btn-admin:hover{background:rgba(200,169,110,.1);}
+  .container{max-width:820px;margin:0 auto;padding:40px 20px 60px;}
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 32px;margin-bottom:24px;transition:border-color .2s;}
+  .section:hover{border-color:#3a4558;}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+  .section-badge{width:32px;height:32px;background:linear-gradient(135deg,rgba(200,169,110,.2),rgba(200,169,110,.1));border:1px solid rgba(200,169,110,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .section-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--accent2);}
+  .section-subtitle{font-size:.75rem;color:var(--muted);}
+  .fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .field-full{grid-column:1/-1;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  label{font-size:.78rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+  input,textarea,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,.1);}
+  input.err{border-color:var(--error)!important;}
+  textarea{resize:vertical;min-height:90px;}
+  select option{background:#1e2330;}
+  .componentes-table{width:100%;border-collapse:collapse;margin-top:4px;}
+  .componentes-table th{text-align:left;font-size:.72rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:0 8px 10px;}
+  .componentes-table td{padding:4px 8px;}
+  .componentes-table input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:9px 12px;width:100%;}
+  .btn-add-row{margin-top:12px;background:transparent;border:1px dashed var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'DM Sans',sans-serif;transition:all .2s;width:100%;}
+  .btn-add-row:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-remove{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:4px;font-size:16px;transition:color .2s;}
+  .btn-remove:hover{color:var(--error);}
+  .product-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .tab-btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-size:.82rem;font-family:'DM Sans',sans-serif;transition:all .2s;}
+  .tab-btn.active{background:linear-gradient(135deg,rgba(200,169,110,.2),rgba(200,169,110,.1));border-color:var(--accent);color:var(--accent2);}
+  .product-panel{display:none;}
+  .product-panel.active{display:block;}
+  .submit-area{text-align:center;margin-top:36px;}
+  .btn-submit{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0d0f14;border:none;padding:16px 56px;border-radius:10px;font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .3s;letter-spacing:.5px;box-shadow:0 4px 20px rgba(200,169,110,.3);}
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,169,110,.4);}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .submit-note{font-size:.75rem;color:var(--muted);margin-top:10px;}
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:12px;font-size:.88rem;box-shadow:0 10px 40px rgba(0,0,0,.5);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:999;min-width:280px;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .toast.success{border-color:var(--success);}
+  .toast.error{border-color:var(--error);}
+  @media(max-width:600px){.fields-grid{grid-template-columns:1fr;}.field-full{grid-column:1;}.header{padding:14px 18px;}.section{padding:20px 18px;}.container{padding:24px 14px 50px;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">📋</div>
+    <div><h1>Ingreso de Cliente</h1><p>Planilla de suplementos · Nutrivibe</p></div>
+  </div>
+  <a href="admin.html" class="btn-admin">🔐 Panel Admin</a>
+</div>
+
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge">👤</div>
+      <div><div class="section-title">Información del Cliente</div><div class="section-subtitle">Datos de contacto y empresa</div></div>
+    </div>
+    <div class="fields-grid">
+      <div class="field"><label>Nombre del Cliente *</label><input type="text" id="nombre" placeholder="Ej: Juan García"></div>
+      <div class="field"><label>Empresa *</label><input type="text" id="empresa" placeholder="Ej: NutriLab S.A."></div>
+      <div class="field"><label>Cargo</label><input type="text" id="cargo" placeholder="Ej: Director Comercial"></div>
+      <div class="field"><label>Teléfono</label><input type="tel" id="telefono" placeholder="Ej: +54 9 11 1234-5678"></div>
+      <div class="field field-full"><label>Correo Electrónico *</label><input type="email" id="email" placeholder="cliente@empresa.com"></div>
+      <div class="field field-full"><label>Fecha de Contacto</label><input type="date" id="fechaContacto"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge">💊</div>
+      <div><div class="section-title">Productos / Suplementos</div><div class="section-subtitle">Información de cada producto (hasta 5)</div></div>
+    </div>
+    <div class="product-tabs">
+      <button class="tab-btn active" onclick="showProduct(0)">Producto 1</button>
+      <button class="tab-btn" onclick="showProduct(1)">Producto 2</button>
+      <button class="tab-btn" onclick="showProduct(2)">Producto 3</button>
+      <button class="tab-btn" onclick="showProduct(3)">Producto 4</button>
+      <button class="tab-btn" onclick="showProduct(4)">Producto 5</button>
+    </div>
+    <div id="productPanels"></div>
+  </div>
+
+  <div class="submit-area">
+    <button class="btn-submit" id="btnSubmit" onclick="enviarFormulario()">Guardar Cliente ✦</button>
+    <div class="submit-note">Los datos se guardan en la nube · visibles desde cualquier dispositivo</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_2ypEPBCQrm4R7edD9yl3N1jDcfeoh5I",
+  authDomain: "fason-ba9d4.firebaseapp.com",
+  projectId: "fason-ba9d4",
+  storageBucket: "fason-ba9d4.firebasestorage.app",
+  messagingSenderId: "1080419549484",
+  appId: "1:1080419549484:web:dff69ef588b4eeecd92c89"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Paneles de productos
+const pc = document.getElementById('productPanels');
+for(let i=0;i<5;i++){
+  const d=document.createElement('div');
+  d.className='product-panel'+(i===0?' active':'');d.id=`panel-${i}`;
+  d.innerHTML=`
+    <div class="fields-grid" style="margin-bottom:20px">
+      <div class="field"><label>Marca Comercial</label><input type="text" id="p${i}_marca" placeholder="Ej: VitalMax"></div>
+      <div class="field"><label>Nombre del Producto</label><input type="text" id="p${i}_nombre" placeholder="Ej: Omega 3 Premium"></div>
+      <div class="field field-full"><label>Descripción Breve</label><textarea id="p${i}_descripcion" placeholder="Breve descripción..."></textarea></div>
+      <div class="field field-full"><label>Objetivo del Suplemento</label><textarea id="p${i}_objetivo" placeholder="¿Para qué sirve?"></textarea></div>
+    </div>
+    <div>
+      <label style="display:block;margin-bottom:12px;">Componentes de la Fórmula</label>
+      <table class="componentes-table">
+        <thead><tr><th>Componente</th><th>Cantidad por Porción</th><th>Beneficio Principal</th><th></th></tr></thead>
+        <tbody id="tbody-${i}"><tr>
+          <td><input type="text" placeholder="Ej: Vitamina C"></td>
+          <td><input type="text" placeholder="Ej: 500mg"></td>
+          <td><input type="text" placeholder="Ej: Antioxidante"></td>
+          <td><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+        </tr></tbody>
+      </table>
+      <button class="btn-add-row" onclick="addRow(${i})">+ Agregar componente</button>
+    </div>`;
+  pc.appendChild(d);
+}
+
+window.showProduct = i => {
+  document.querySelectorAll('.product-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+};
+window.addRow = i => {
+  const t=document.getElementById(`tbody-${i}`),tr=document.createElement('tr');
+  tr.innerHTML=`<td><input type="text" placeholder="Componente"></td><td><input type="text" placeholder="Cantidad"></td><td><input type="text" placeholder="Beneficio"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td>`;
+  t.appendChild(tr);
+};
+window.removeRow = btn => { const t=btn.closest('tbody');if(t.rows.length>1)btn.closest('tr').remove(); };
+
+function recopilarDatos(){
+  const d={
+    nombre:document.getElementById('nombre').value.trim(),
+    empresa:document.getElementById('empresa').value.trim(),
+    cargo:document.getElementById('cargo').value.trim(),
+    telefono:document.getElementById('telefono').value.trim(),
+    email:document.getElementById('email').value.trim(),
+    fechaContacto:document.getElementById('fechaContacto').value,
+    productos:[]
+  };
+  for(let i=0;i<5;i++){
+    const marca=document.getElementById(`p${i}_marca`).value.trim();
+    const nombre=document.getElementById(`p${i}_nombre`).value.trim();
+    const desc=document.getElementById(`p${i}_descripcion`).value.trim();
+    const obj=document.getElementById(`p${i}_objetivo`).value.trim();
+    const componentes=[];
+    document.querySelectorAll(`#tbody-${i} tr`).forEach(fila=>{
+      const inp=fila.querySelectorAll('input');
+      const c=inp[0].value.trim(),q=inp[1].value.trim(),b=inp[2].value.trim();
+      if(c||q||b)componentes.push({componente:c,cantidad:q,beneficio:b});
+    });
+    if(marca||nombre||desc||obj||componentes.length)
+      d.productos.push({numero:i+1,marca,nombre,descripcion:desc,objetivo:obj,componentes});
+  }
+  return d;
+}
+
+window.enviarFormulario = async () => {
+  const d=recopilarDatos();
+  let err=false;
+  ['nombre','empresa','email'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('err');err=true;}else el.classList.remove('err');
+  });
+  if(err){toast('❌ Completá Nombre, Empresa y Email','error');return;}
+  const btn=document.getElementById('btnSubmit');
+  btn.disabled=true;btn.textContent='Guardando...';
+  try{
+    await addDoc(collection(db,'clientes'),{...d,estado:'nuevo',cita:null,notas:'',creadoEn:new Date().toISOString()});
+    toast('✅ ¡Cliente guardado en la nube!','success');
+    setTimeout(limpiar,1800);
+  }catch(e){
+    console.error(e);
+    toast('❌ Error al guardar. Revisá la conexión.','error');
+  }
+  btn.disabled=false;btn.textContent='Guardar Cliente ✦';
+};
+
+function limpiar(){
+  ['nombre','empresa','cargo','telefono','email','fechaContacto'].forEach(id=>{
+    document.getElementById(id).value='';document.getElementById(id).classList.remove('err');
+  });
+  for(let i=0;i<5;i++){
+    ['marca','nombre','descripcion','objetivo'].forEach(f=>document.getElementById(`p${i}_${f}`).value='');
+    document.getElementById(`tbody-${i}`).innerHTML=`<tr><td><input type="text" placeholder="Ej: Vitamina C"></td><td><input type="text" placeholder="Ej: 500mg"></td><td><input type="text" placeholder="Ej: Antioxidante"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>`;
+  }
+  window.showProduct(0);
+  document.getElementById('fechaContacto').valueAsDate=new Date();
+}
+
+function toast(msg,tipo){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.className=`toast ${tipo} show`;
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+document.getElementById('fechaContacto').valueAsDate=new Date();
+</script>
+</body>
+</html>
